@@ -110,6 +110,9 @@ table{width:100%;border-collapse:collapse;font-size:13px}td,th{padding:6px;borde
 #lbv .box{max-width:min(94vw,860px);max-height:94vh;padding:14px}#lbv .box img{max-height:44vh}
 .lbd2{height:min(11em,30vh);font-size:15px;padding:10px 16px;margin:10px 0 6px}
 #lbv .row{margin-top:6px;justify-content:center;gap:6px}#lbv .row .btn{min-height:32px;padding:2px 14px;font-size:13px;border-radius:10px}
+#lbv .box{display:flex;flex-direction:column;width:min(96vw,1100px);max-width:none;height:94vh;max-height:94vh;overflow:hidden;padding:12px}
+#lbv .box img{flex:1;min-height:0;width:100%;max-width:100%;max-height:none;object-fit:contain}
+#lbv .lbd2{height:auto;min-height:0;max-height:34vh;flex:none;margin:8px 0 4px}#lbv .mu,#lbv .row{flex:none}
 </style>
 </head>
 <body>
@@ -233,7 +236,7 @@ function tp(k,id){const o=k=="i"?items.find(x=>x.id==id):imgs[id];o.pin=!o.pin;t
 function saveHero(){const t=$("#ht").value.trim();if(!t){toast("العنوان مطلوب");return}hero={t,p:$("#hp").value.trim()};toast("تم حفظ الرئيسية");render()}
 const fd=d=>String(d).split("-").reverse().join("/"),td=()=>new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10);
 function gs(d){S.st+=d;if(S.st>=steps.length||S.st<0)S.st=0;render()}
-function lb(i){X();const o=document.createElement("div");o.id="lbv";o.className="ov";const sh=j=>{j=(j+imgs.length)%imgs.length;o.dataset.i=j;const m=imgs[j];o.innerHTML=`<div class="box"><img src="${m.src}" alt="${esc(m.d||"صورة من المكتبة")}">${m.dt?`<div class="mu" style="text-align:center;margin-top:8px;font-weight:600">في: ${fd(m.dt)}</div>`:""}<div class="lbd2">${m.d?esc(m.d):'<span style="opacity:.5">بدون وصف</span>'}</div><div class="row" style="justify-content:center"><button class="btn gh" data-n="-1">السابق</button><button class="btn gh" data-n="1">التالي</button><button class="btn" data-x="1">إغلاق</button></div></div>`};sh(i);o.onclick=e=>{const t=e.target;if(t===o||t.dataset.x)o.remove();else if(t.dataset.n)sh(+o.dataset.i+ +t.dataset.n)};document.body.append(o)}
+function lb(i){X();const o=document.createElement("div");o.id="lbv";o.className="ov";const sh=j=>{j=(j+imgs.length)%imgs.length;o.dataset.i=j;const m=imgs[j];o.innerHTML=`<div class="box"><img src="${m.src}" alt="${esc(m.d||"صورة من المكتبة")}">${m.dt?`<div class="mu" style="text-align:center;margin-top:8px;font-weight:600">في: ${fd(m.dt)}</div>`:""}${m.d?`<div class="lbd2">${esc(m.d)}</div>`:""}<div class="row" style="justify-content:center"><button class="btn gh" data-n="-1">السابق</button><button class="btn gh" data-n="1">التالي</button><button class="btn" data-x="1">إغلاق</button></div></div>`};sh(i);o.onclick=e=>{const t=e.target;if(t===o||t.dataset.x)o.remove();else if(t.dataset.n)sh(+o.dataset.i+ +t.dataset.n)};document.body.append(o)}
 function save(){if(!owner||!loaded)return;clearTimeout(tm);tm=setTimeout(async()=>{const r=await sb.from("kv").upsert([{key:"pub",data:{cats,items,imgs,about,gifts,hero}},{key:"loans",data:loans}]);if(r.error)toast("تعذّر الحفظ: "+r.error.message)},400)}
 pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 function render(){if(S.v=="admin")save();const nv=[["book","المكتبة الورقية","L(1)",S.v=="lib"&&path(S.n)[0].id==1],["pc","الإلكترونية","L(2)",S.v=="lib"&&path(S.n)[0].id==2],["img","صور المكتبة","go('gallery')",S.v=="gallery"],["cmp","الدليل","go('guide')",S.v=="guide"],["inf","من نحن","go('about')",S.v=="about"]];$("#nav").innerHTML=nv.map(n=>`<button class="${n[3]?"on":""}" onclick="${n[2]}">${ic(n[0])}${n[1]}</button>`).join("");$("#app").innerHTML=V[S.v]()}
